@@ -7,6 +7,8 @@ function AppUser() {
   const [displayLoginModal, setDisplayLoginModal] = useState(false);
   const [displayRegisterModal, setDisplayRegisterModal] = useState(false);
 
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const handleCancel = (type) => {
     type === "login"
       ? setDisplayLoginModal(false)
@@ -17,6 +19,7 @@ function AppUser() {
     login(data)
       .then(() => {
         setDisplayLoginModal(false);
+        setIsLoggedIn(true);
         message.success("Welcome back");
       })
       .catch((err) => {
@@ -38,6 +41,7 @@ function AppUser() {
   const handleLogout = () => {
     logout()
       .then(() => {
+        setIsLoggedIn(false);
         message.success("Successfully logged out");
       })
       .catch((err) => {
@@ -63,9 +67,9 @@ function AppUser() {
 
   const menu = (
     <Menu onClick={handleMenuClick}>
-      <Menu.Item key="1">Login</Menu.Item>
-      <Menu.Item key="2">Logout</Menu.Item>
-      <Menu.Item key="3">Register</Menu.Item>
+      {!isLoggedIn && <Menu.Item key="1">Login</Menu.Item>}
+      {isLoggedIn && <Menu.Item key="2">Logout</Menu.Item>}
+      {!isLoggedIn && <Menu.Item key="3">Register</Menu.Item>}
       {/* Add other user-related features as needed */}
     </Menu>
   );
