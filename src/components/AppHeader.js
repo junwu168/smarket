@@ -112,30 +112,4 @@ function SearchBox() {
   );
 }
 
-function AppCart() {
-  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
-  return (
-    <div>
-      <Badge
-        onClick={() => {
-          setCartDrawerOpen(true);
-        }}
-        className="shoppingCartIcon"
-      >
-        <ShoppingCartOutlined />
-      </Badge>
-      <Drawer
-        open={cartDrawerOpen}
-        onClose={() => {
-          setCartDrawerOpen(false);
-        }}
-        title="Your Cart"
-        contentWrapperStyle={{ width: 500 }}
-      >
-        Shoping Cart
-      </Drawer>
-    </div>
-  );
-}
-
 export default AppHeader;
