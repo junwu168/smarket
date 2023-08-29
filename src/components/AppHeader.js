@@ -12,12 +12,6 @@ import {
   Table,
   Typography,
   Dropdown,
-  List,
-  Avatar,
-  Card,
-  Radio,
-  Row,
-  Col,
 } from "antd";
 import {
   SearchOutlined,
@@ -26,15 +20,11 @@ import {
   HomeFilled,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
-import AppCart from "./AppCart";
-import AppUser from "./AppUser";
-import { useNavigate } from "react-router-dom";
+import { Link } from 'react-router-dom';
 
 function AppHeader() {
-  const navigate = useNavigate();
-
   const onMenuClick = (item) => {
-    navigate(`/${item.key}`);
+    console.log(item);
   };
   return (
     <div className="appHeader">
@@ -112,6 +102,22 @@ function SearchBox() {
   );
 }
 
+function AppUser() {
+  const menu = (
+    <Menu>
+      <Menu.Item key="1">Login</Menu.Item>
+      <Menu.Item key="2">Logout</Menu.Item>
+      <Menu.Item key="3"><Link to="/selling-overview">My Selling Overview</Link></Menu.Item>
+      {/* Add other user-related features as needed */}
+    </Menu>
+  );
+
+  return (
+    <Dropdown overlay={menu} trigger={["click"]}>
+      <UserOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
+    </Dropdown>
+  );
+}
 function AppCart() {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   return (
