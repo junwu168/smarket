@@ -20,10 +20,13 @@ import {
   HomeFilled,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
+import { useNavigate } from "react-router-dom";
 
 function AppHeader() {
+  const navigate = useNavigate();
+
   const onMenuClick = (item) => {
-    console.log(item);
+    navigate(`/${item.key}`);
   };
   return (
     <div className="appHeader">
