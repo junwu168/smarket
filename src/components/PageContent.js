@@ -1,9 +1,15 @@
 import Products from "./Products";
+import { Route, Routes } from "react-router-dom";
+import ProductDetail from "./ProductDetail";
 
 function PageContent() {
   return (
     <div className="pageContent">
-      <Products />
+      <Routes>
+        <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/" element={<Products />} />
+        {/* Add other routes as needed */}
+      </Routes>
     </div>
   );
 }

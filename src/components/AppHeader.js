@@ -27,10 +27,14 @@ import {
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
 import AppCart from "./AppCart";
+import AppUser from "./AppUser";
+import { useNavigate } from "react-router-dom";
 
 function AppHeader() {
+  const navigate = useNavigate();
+
   const onMenuClick = (item) => {
-    console.log(item);
+    navigate(`/${item.key}`);
   };
   return (
     <div className="appHeader">
@@ -108,19 +112,29 @@ function SearchBox() {
   );
 }
 
-function AppUser() {
-  const menu = (
-    <Menu>
-      <Menu.Item key="1">Login</Menu.Item>
-      <Menu.Item key="2">Logout</Menu.Item>
-      {/* Add other user-related features as needed */}
-    </Menu>
-  );
-
+function AppCart() {
+  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   return (
-    <Dropdown overlay={menu} trigger={["click"]}>
-      <UserOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-    </Dropdown>
+    <div>
+      <Badge
+        onClick={() => {
+          setCartDrawerOpen(true);
+        }}
+        className="shoppingCartIcon"
+      >
+        <ShoppingCartOutlined />
+      </Badge>
+      <Drawer
+        open={cartDrawerOpen}
+        onClose={() => {
+          setCartDrawerOpen(false);
+        }}
+        title="Your Cart"
+        contentWrapperStyle={{ width: 500 }}
+      >
+        Shoping Cart
+      </Drawer>
+    </div>
   );
 }
 
