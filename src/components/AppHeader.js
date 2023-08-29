@@ -20,12 +20,13 @@ import {
   HomeFilled,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function AppHeader() {
-  const history = useHistory();
+  const navigate = useNavigate();
+
   const onMenuClick = (item) => {
-    history.push(item.key);
+    navigate(`/${item.key}`);
   };
   return (
     <div className="appHeader">
@@ -37,7 +38,7 @@ function AppHeader() {
         items={[
           {
             label: <HomeFilled />,
-            key: "/",
+            key: "",
           },
           {
             label: "Electronics",
