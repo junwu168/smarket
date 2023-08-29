@@ -12,6 +12,12 @@ import {
   Table,
   Typography,
   Dropdown,
+  List,
+  Avatar,
+  Card,
+  Radio,
+  Row,
+  Col,
 } from "antd";
 import {
   SearchOutlined,
@@ -20,11 +26,15 @@ import {
   HomeFilled,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
-import { Link } from 'react-router-dom';
+import AppCart from "./AppCart";
+import AppUser from "./AppUser";
+import { useNavigate } from "react-router-dom";
 
 function AppHeader() {
+  const navigate = useNavigate();
+
   const onMenuClick = (item) => {
-    console.log(item);
+    navigate(`/${item.key}`);
   };
   return (
     <div className="appHeader">
