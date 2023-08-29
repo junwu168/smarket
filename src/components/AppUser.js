@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Menu, Dropdown, Button, Form, Input, message, Modal } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 import { login, register, logout } from "../utils";
+import { Link } from "react-router-dom";
 
 function AppUser() {
   const [displayLoginModal, setDisplayLoginModal] = useState(false);
@@ -70,6 +71,11 @@ function AppUser() {
       {!isLoggedIn && <Menu.Item key="1">Login</Menu.Item>}
       {isLoggedIn && <Menu.Item key="2">Logout</Menu.Item>}
       {!isLoggedIn && <Menu.Item key="3">Register</Menu.Item>}
+      {isLoggedIn && (
+        <Menu.Item key="4">
+          <Link to="/sell">Sell</Link>
+        </Menu.Item>
+      )}
       {/* Add other user-related features as needed */}
     </Menu>
   );
