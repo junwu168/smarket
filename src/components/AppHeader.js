@@ -12,6 +12,12 @@ import {
   Table,
   Typography,
   Dropdown,
+  List,
+  Avatar,
+  Card,
+  Radio,
+  Row,
+  Col,
 } from "antd";
 import {
   SearchOutlined,
@@ -20,6 +26,7 @@ import {
   HomeFilled,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
+import AppCart from "./AppCart";
 
 function AppHeader() {
   const onMenuClick = (item) => {
@@ -114,31 +121,6 @@ function AppUser() {
     <Dropdown overlay={menu} trigger={["click"]}>
       <UserOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
     </Dropdown>
-  );
-}
-function AppCart() {
-  const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
-  return (
-    <div>
-      <Badge
-        onClick={() => {
-          setCartDrawerOpen(true);
-        }}
-        className="shoppingCartIcon"
-      >
-        <ShoppingCartOutlined />
-      </Badge>
-      <Drawer
-        open={cartDrawerOpen}
-        onClose={() => {
-          setCartDrawerOpen(false);
-        }}
-        title="Your Cart"
-        contentWrapperStyle={{ width: 500 }}
-      >
-        Shoping Cart
-      </Drawer>
-    </div>
   );
 }
 
