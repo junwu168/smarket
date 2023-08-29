@@ -20,6 +20,7 @@ import {
   HomeFilled,
 } from "@ant-design/icons";
 import Search from "antd/es/input/Search";
+import AppUser from "./AppUser";
 import { useNavigate } from "react-router-dom";
 
 function AppHeader() {
@@ -104,21 +105,6 @@ function SearchBox() {
   );
 }
 
-function AppUser() {
-  const menu = (
-    <Menu>
-      <Menu.Item key="1">Login</Menu.Item>
-      <Menu.Item key="2">Logout</Menu.Item>
-      {/* Add other user-related features as needed */}
-    </Menu>
-  );
-
-  return (
-    <Dropdown overlay={menu} trigger={["click"]}>
-      <UserOutlined style={{ fontSize: "20px", cursor: "pointer" }} />
-    </Dropdown>
-  );
-}
 function AppCart() {
   const [cartDrawerOpen, setCartDrawerOpen] = useState(false);
   return (
