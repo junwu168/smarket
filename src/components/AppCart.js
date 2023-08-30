@@ -137,66 +137,6 @@ function CartItems() {
     getTotal();
   }, [data]);
   return (
-    // <div>
-    //   <List
-    //     grid={{ gutter: 16, column: 1 }}
-    //     dataSource={data}
-    //     renderItem={(item) => (
-    //       <List.Item>
-    //         <Card title={item.Seller_name}>
-    //           <Row align="middle">
-    //             <Col span={2}>
-    //               <Checkbox
-    //                 onChange={() => checked(item.Product_name)}
-    //                 checked={item.Checked}
-    //               ></Checkbox>
-    //             </Col>
-    //             <Col span={11}>
-    //               <Meta
-    //                 avatar={
-    //                   <Avatar
-    //                     src="https://i.dummyjson.com/data/products/1/1.jpg"
-    //                     size={64}
-    //                     shape="square"
-    //                   />
-    //                 }
-    //                 title={item.Product_name}
-    //                 description={"￥" + item.Price}
-    //               />
-    //             </Col>
-    //             <Space size={33}>
-    //               <Space>
-    //                 <Button
-    //                   size="small"
-    //                   onClick={() => minusOne(item.Product_name)}
-    //                 >
-    //                   -
-    //                 </Button>
-    //                 <Tooltip>{item.Quantity}</Tooltip>
-    //                 <Button
-    //                   size="small"
-    //                   onClick={() => addOne(item.Product_name)}
-    //                 >
-    //                   +
-    //                 </Button>
-    //               </Space>
-    //               <Button onClick={() => deleteItem(item.Product_name)}>
-    //                 {" "}
-    //                 Delete{" "}
-    //               </Button>
-    //             </Space>
-    //           </Row>
-    //         </Card>
-    //       </List.Item>
-    //     )}
-    //   />
-    //   <Space size={70}>
-    //     <Tag style={styles} bordered={false}>
-    //       Total: ￥{total}
-    //     </Tag>
-    //     <Button>Check Out</Button>
-    //   </Space>
-    // </div>
     <div>
       <InfiniteScroll
         dataLength={data.length}
