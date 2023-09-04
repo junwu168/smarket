@@ -1,17 +1,1 @@
-.item-sold {
-  font-size: 20px; /* Adjust the font size as needed */
-  text-align: right; /* Center-align the count */
-}
-.item-active {
-  font-size: 20px; /* Adjust the font size as needed */
-  text-align: center; /* Center-align the count */
-}
-.item-unsold {
-  font-size: 20px; /* Adjust the font size as needed */
-  text-align: right; /* Center-align the count */
-}
-.item-count-container {
-  display: flex;
-  justify-content: space-evenly; /* Distribute items along the container */
-  /* Add margin to separate from the list */
-}
+
