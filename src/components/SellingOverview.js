@@ -1,67 +1,124 @@
-import React, { useState, useEffect } from "react";
-import { getProduct } from "../utils";
-import { Avatar, List, Button } from "antd";
-import "./SellingOverview.css";
+import React, { useState, useEffect } from 'react';
+import { getProduct } from '../utils';
+import { Avatar, List, Button } from 'antd';
+
+
 
 function SellingOverview() {
-  const [products, setProducts] = useState([]);
+  const [sellingList, setSellingList]=useState([]);
+  const [soldList, setSoldList]=useState([]);
+  const [unsoldCount, setUnsoldCount] = useState(0);
+  const [activeCount, setActiveCount] = useState(0);
+  const [soldCount, setSoldCount] = useState(0);
 
-  useEffect(() => {
-    getProduct().then((data) => {
-      setProducts(data.products);
-    });
-  }, []);
+  const sellingListHandler = () =>{
+    const newItem = {id: sellingList.length+1, title:'new item'};
+    setSellingList(prevList => [...prevList, newItem]);
+    setActiveCount(prevCount => prevCount + 1);
+    setUnsoldCount(prevCount => prevCount + 1);
+  };
+
+
+  const deleteHandler = itemId =>{
+    setSellingList(prevList => prevList.filter(item=> item.id!=itemId));
+    setActiveCount(prevCount => prevCount - 1);
+    setUnsoldCount(prevCount => prevCount - 1); 
+  };
+
+  const editHandler = itemId =>{
+
+  };
+
 
   return (
-    <div className="selling-overview">
+    <div className="selling-overview" 
+      style={{
+        display: 'column',
+        flex: '1',
+
+      }}>
       <h2>My Selling Overview</h2>
-      <div className="item-count-container">
-        <p className="item-sold">Sold: 0</p>
-        <p className="item-active">Active: 0</p>
-        <p className="item-unsold">Unsold: 0</p>
-        <Button
-          key="list"
+      <div 
+        className="item-count-container"
+        style={{
+          display: 'flex',
+          justifyContent: 'space-evenly',
+        }}
+      >
+        
+        <p 
+          className="item-sold"
           style={{
-            backgroundColor: "#2B60DE",
-            color: "white",
-            fontSize: "24px",
-            padding: "20px 40px",
-            marginTop: "10px",
+            fontSize:'20px',
           }}
-        >
-          List an Item
+        >Sold: {soldCount}</p>
+        <p 
+          className="item-active"
+          style={{
+            fontSize:'20px',
+          }}
+          >Active: {activeCount}</p>
+        <p 
+          className="item-unsold"
+          style={{
+            fontSize:'20px',
+          }}
+          >Unsold: {unsoldCount}</p>
+        <Button
+            key="list"
+            type='primary'
+            size='large'
+            onClick={sellingListHandler}
+            style={{
+                backgroundColor: '#2B60DE',
+                color: 'white',
+              }}
+        >   
+        List an Item
         </Button>
+    
       </div>
+      <h3>Unsold:</h3>
       <List
-        className="selling-items"
+        className="selling-items" 
         itemLayout="horizontal"
-        dataSource={products}
+        dataSource={sellingList}
         renderItem={(product, index) => (
-          <List.Item
-            key={product.id}
-            actions={[
-              <Button
+          <List.Item 
+          key={product.id}
+        
+          actions={[
+            <Button 
                 key="edit"
-                style={{ backgroundColor: "#2B60DE", color: "white" }}
-              >
-                Edit
-              </Button>,
-              <Button
+                style={{backgroundColor:'#2B60DE',color:'white'}}
+                onClick={()=> editHandler(product.id)}
+            >
+            Edit
+            </Button>,
+            <Button 
                 key="delete"
-                style={{ backgroundColor: "red", color: "white" }}
-              >
-                Delete
-              </Button>,
-            ]}
+                style={{backgroundColor:'red',color:'white'}}
+                onClick={() => deleteHandler(product.id)}
+            >
+            Delete
+            </Button>,
+          ]}
           >
             <List.Item.Meta
-              avatar={<Avatar src={product.thumbnail} size={128} />}
+              avatar={<Avatar src={product.thumbnail} size={128}/>}
               title={product.title}
               description={product.description}
             />
           </List.Item>
         )}
       />
+      <h3>Sold:</h3>
+      <List
+        className='sold-items'
+        itemLayout="horizontal"
+        dataSource={soldList}
+        >
+      </List>
     </div>
   );
 }
