@@ -1,92 +1,82 @@
-import data from "./products.json";
+const domain = "http://localhost:8080";
 
 export const getProduct = () => {
-  return Promise.resolve(data);
+  const productUrl = domain + "/products";
+
+  return fetch(productUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Something wrong, try again");
+    }
+    return response.json();
+  });
 };
 
-const products = data.products;
+export const searchProductByName = (name) => {
+  const productUrl = `${domain}/search?Title=${encodeURIComponent(name)}`;
+  return fetch(productUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Something wrong, try again");
+    }
+    return response.json();
+  });
+};
+
 export const getProductById = (id) => {
-  const product = products.find((p) => p.id === parseInt(id));
-
-  if (product) {
-    return Promise.resolve(product);
-  } else {
-    return Promise.reject(new Error("Product not found"));
-  }
+  const productUrl = `${domain}/item?id=${encodeURIComponent(id)}`;
+  return fetch(productUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Something wrong, try again");
+    }
+    return response.json();
+  });
 };
 
-const SERVER_ORIGIN = "";
+export const login = (credential) => {
+  const loginUrl = domain + "/login";
 
-const loginUrl = `${SERVER_ORIGIN}/login`;
+  console.log(credential);
 
-// export const login = (credential) => {
-//   const formData = new FormData();
-//   formData.append("username", credential.username);
-//   formData.append("password", credential.password);
+  return fetch(loginUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credential),
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to log in");
+    }
 
-//   return fetch(loginUrl, {
-//     method: "POST",
-//     credentials: "include",
-//     body: formData,
-//   }).then((response) => {
-//     if (response.status !== 204) {
-//       throw Error("Fail to log in");
-//     }
-//   });
-// };
+    return response.text();
+  });
+};
 
-const registerUrl = `${SERVER_ORIGIN}/register`;
-
-export const register = (data) => {
+export const register = (credential) => {
+  const registerUrl = domain + "/register";
   return fetch(registerUrl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(credential),
   }).then((response) => {
     if (response.status !== 200) {
       throw Error("Fail to register");
     }
-  });
-};
-
-const logoutUrl = `${SERVER_ORIGIN}/logout`;
-
-// export const logout = () => {
-//   return fetch(logoutUrl, {
-//     method: "POST",
-//     credentials: "include",
-//   }).then((response) => {
-//     if (response.status !== 204) {
-//       throw Error("Fail to log out");
-//     }
-//   });
-// };
-
-//mock login
-export const login = (credential) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // mock network delay
-      if (
-        credential.username === "test" &&
-        credential.password === "password" //mock username and password
-      ) {
-        resolve(); // login success
-      } else {
-        reject(new Error("Invalid username or password")); // login fail
-      }
-    }, 1000);
-  });
-};
-
-//mock logout
-export const logout = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      // Simulate a successful logout
-      resolve();
-    }, 1000); // This will wait for 1 second before resolving the promise
   });
 };

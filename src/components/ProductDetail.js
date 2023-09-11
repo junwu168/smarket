@@ -11,7 +11,7 @@ function ProductDetail() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    getProductById(Number(id))
+    getProductById(id)
       .then((data) => {
         setProduct(data);
       })
@@ -42,11 +42,11 @@ function ProductDetail() {
           }}
         >
           <Carousel autoplay dotPosition="left">
-            {product.images.map((image, index) => (
+            {product.Images.map((image, index) => (
               <div key={index} className="carousel-image-container">
                 <img
-                  src={image}
-                  alt={product.title}
+                  src={image.url}
+                  alt={product.Title}
                   style={{
                     width: "100%",
                     objectFit: "contain",
@@ -59,11 +59,11 @@ function ProductDetail() {
           </Carousel>
         </div>
         <div style={{ flex: "1", padding: "10px" }}>
-          <Title level={2}>{product.title}</Title>
-          <Rate disabled defaultValue={product.rating} />
-          <Title level={4}>Price: ${product.price}</Title>
-          <Paragraph>Stock: {product.stock}</Paragraph>
-          <Paragraph>{product.description}</Paragraph>
+          <Title level={2}>{product.Title}</Title>
+          <Rate disabled defaultValue={4.5} />
+          <Title level={4}>Price: ${product.Price}</Title>
+          <Paragraph>Stock: {product.Inventory}</Paragraph>
+          <Paragraph>{product.Description}</Paragraph>
           <Button
             type="primary"
             icon={<ShoppingCartOutlined />}

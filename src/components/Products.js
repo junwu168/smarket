@@ -1,45 +1,45 @@
-import { useEffect, useState } from "react";
-import {
-  Badge,
-  Button,
-  Card,
-  Image,
-  List,
-  message,
-  Rate,
-  Typography,
-} from "antd";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, Card, Image, List, Rate, Typography } from "antd";
 import { getProduct } from "../utils";
 import { Link } from "react-router-dom";
+import { SearchContext } from "../App";
 
 function Products() {
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
+  const { searchResults } = useContext(SearchContext);
+
   useEffect(() => {
-    setLoading(true);
-    getProduct()
-      .then((data) => setItems(data.products))
-      .finally(() => {
-        setLoading(false);
-      });
-  }, []);
+    if (searchResults.length > 0) {
+      setItems(searchResults);
+    } else {
+      setLoading(true);
+      getProduct()
+        .then((data) => setItems(data))
+        .finally(() => {
+          setLoading(false);
+        });
+    }
+  }, [searchResults]);
+
+  const columns = items.length > 2 ? 3 : items.length;
 
   return (
     <div className="productsContainer">
       <List
         loading={loading}
-        grid={{ column: 3 }}
+        grid={{ column: columns }}
         renderItem={(product, index) => {
           return (
             <Card
               className="itemCard"
-              title={product.title}
+              title={product.Title}
               key={index}
               cover={
-                <Image className="itemCardImage" src={product.thumbnail} />
+                <Image className="itemCardImage" src={product.Images[0].url} />
               }
               actions={[
-                <Rate allowHalf disabled value={product.rating} />,
+                <Rate allowHalf disabled value={3.5} />,
                 <Link to={`/product/${product.id}`}>
                   <Button style={{ border: "2px solid blue" }}>Details</Button>
                 </Link>,
@@ -48,14 +48,14 @@ function Products() {
               <Card.Meta
                 title={
                   <Typography.Paragraph>
-                    Price: ${product.price}
+                    Price: ${product.Price}
                   </Typography.Paragraph>
                 }
                 description={
                   <Typography.Paragraph
                     ellipsis={{ rows: 2, expandable: true, symbol: "more" }}
                   >
-                    {product.description}
+                    {product.Description}
                   </Typography.Paragraph>
                 }
               ></Card.Meta>

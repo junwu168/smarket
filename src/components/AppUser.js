@@ -16,16 +16,21 @@ function AppUser() {
       : setDisplayRegisterModal(false);
   };
 
-  const handleLoginFinish = (data) => {
-    login(data)
-      .then(() => {
-        setDisplayLoginModal(false);
-        setIsLoggedIn(true);
-        message.success("Welcome back");
-      })
-      .catch((err) => {
-        message.error(err.message);
-      });
+  const handleLoginFinish = async (data) => {
+    try {
+      const response = await login(data);
+
+      if (response) {
+        localStorage.setItem("userToken", response);
+      }
+
+      setDisplayLoginModal(false);
+      setIsLoggedIn(true);
+      message.success("Welcome back");
+    } catch (err) {
+      console.log(err);
+      message.error(err.message || "An error occurred during login");
+    }
   };
 
   const handleRegisterFinish = (data) => {
@@ -40,14 +45,9 @@ function AppUser() {
   };
 
   const handleLogout = () => {
-    logout()
-      .then(() => {
-        setIsLoggedIn(false);
-        message.success("Successfully logged out");
-      })
-      .catch((err) => {
-        message.error(err.message);
-      });
+    localStorage.removeItem("userToken");
+    setIsLoggedIn(false);
+    message.success("Successfully logged out");
   };
 
   const handleMenuClick = (e) => {
@@ -96,13 +96,13 @@ function AppUser() {
       >
         <Form name="normal_login" onFinish={handleLoginFinish}>
           <Form.Item
-            name="username"
+            name="Username"
             rules={[{ required: true, message: "Please input your Username!" }]}
           >
             <Input prefix={<UserOutlined />} placeholder="Username" />
           </Form.Item>
           <Form.Item
-            name="password"
+            name="Password"
             rules={[{ required: true, message: "Please input your Password!" }]}
           >
             <Input.Password prefix={<LockOutlined />} placeholder="Password" />
@@ -125,19 +125,19 @@ function AppUser() {
       >
         <Form name="normal_register" onFinish={handleRegisterFinish}>
           <Form.Item
-            name="username"
+            name="Username"
             rules={[{ required: true, message: "Please input your Username!" }]}
           >
             <Input prefix={<UserOutlined />} placeholder="Username" />
           </Form.Item>
           <Form.Item
-            name="password"
+            name="Password"
             rules={[{ required: true, message: "Please input your Password!" }]}
           >
             <Input prefix={<LockOutlined />} placeholder="Password" />
           </Form.Item>
           <Form.Item
-            name="first_name"
+            name="First_name"
             rules={[
               { required: true, message: "Please input your Firstname!" },
             ]}
@@ -145,10 +145,22 @@ function AppUser() {
             <Input placeholder="firstname" />
           </Form.Item>
           <Form.Item
-            name="last_name"
+            name="Last_name"
             rules={[{ required: true, message: "Please input your Lastname!" }]}
           >
             <Input placeholder="lastname" />
+          </Form.Item>
+          <Form.Item
+            name="Address"
+            rules={[{ required: true, message: "Please input your Address!" }]}
+          >
+            <Input placeholder="Address" />
+          </Form.Item>
+          <Form.Item
+            name="Phone"
+            rules={[{ required: true, message: "Please input your Phone!" }]}
+          >
+            <Input placeholder="(888)888-8888" />
           </Form.Item>
           <Form.Item>
             <Button type="primary" htmlType="submit">

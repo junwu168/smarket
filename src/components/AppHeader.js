@@ -1,33 +1,9 @@
-import React, { useState } from "react";
-import {
-  Badge,
-  Button,
-  Checkbox,
-  Drawer,
-  Form,
-  Input,
-  InputNumber,
-  Menu,
-  message,
-  Table,
-  Typography,
-  Dropdown,
-  List,
-  Avatar,
-  Card,
-  Radio,
-  Row,
-  Col,
-} from "antd";
-import {
-  SearchOutlined,
-  ShoppingCartOutlined,
-  UserOutlined,
-  HomeFilled,
-} from "@ant-design/icons";
-import Search from "antd/es/input/Search";
+import React from "react";
+import { Menu } from "antd";
+import { HomeFilled } from "@ant-design/icons";
 import AppCart from "./AppCart";
 import AppUser from "./AppUser";
+import SearchBox from "./SearchBox";
 import { useNavigate } from "react-router-dom";
 
 function AppHeader() {
@@ -92,23 +68,6 @@ function AppHeader() {
         <AppUser />
       </div>
     </div>
-  );
-}
-
-function SearchBox() {
-  const [searchValue, setSearchValue] = useState("");
-
-  const handleSearch = (value) => {
-    console.log("Search Value:", value);
-    // Implement search logic
-  };
-
-  return (
-    <Search
-      placeholder="Search..."
-      onSearch={handleSearch}
-      style={{ width: "40%", minWidth: "300px" }}
-    />
   );
 }
 
