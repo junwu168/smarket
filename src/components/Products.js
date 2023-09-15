@@ -15,7 +15,7 @@ function Products() {
     } else {
       setLoading(true);
       getProduct()
-        .then((data) => setItems(data))
+        .then((data) => setItems(data.slice(0, 7)))
         .finally(() => {
           setLoading(false);
         });

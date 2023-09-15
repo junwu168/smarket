@@ -19,6 +19,7 @@ import {
 } from "antd";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { ShoppingCartOutlined } from "@ant-design/icons";
+import { getShoppingCart, getProductList } from "../utils";
 
 const styles = {
   fontSize: "20px",
@@ -55,6 +56,7 @@ function AppCart() {
 
 function CartItems() {
   const { Meta } = Card;
+  const [ddata, setDdata] = useState([]);
   const [data, setData] = useState([
     {
       Seller_name: "Seller 1",
@@ -95,30 +97,46 @@ function CartItems() {
 
   const [total, setTotal] = useState(0);
 
+  // const [cartData, setCartData] = useState([]);
+  // const [productDetails, setProductDetails] = useState([]);
+
+  // const getdata = () => {
+  //   setCartData(getShoppingCart())
+  //     .then(() => {
+  //       let idList = cartData.map(function (item) {
+  //         return { id: item.cartItemKey.item };
+  //       });
+  //       setProductDetails(getProductList(idList));
+  //     })
+  //     .then(() => {
+  //       return Object.assign(data, productDetails);
+  //     });
+  // };
+
   const addOne = (name) => {
-    let newData = [...data];
-    newData.find((item) => item.Product_name === name).Quantity++;
+    let newData = [...ddata];
+    newData.find((item) => item.Title === name).count++;
     setData(newData);
   };
 
   const minusOne = (name) => {
-    if (data.find((item) => item.Product_name === name).Quantity == 0) {
+    if (ddata.find((item) => item.Title === name).count == 0) {
       return;
     }
-    let newData = [...data];
-    newData.find((item) => item.Product_name === name).Quantity--;
+    let newData = [...ddata];
+    newData.find((item) => item.Title === name).count--;
     setData(newData);
   };
 
   const deleteItem = (name) => {
-    let newData = data.filter((item) => item.Product_name !== name);
+    let newData = ddata.filter((item) => item.Title !== name);
 
     setData(newData);
   };
 
   const checked = (name) => {
-    let newData = [...data];
-    let target = newData.find((item) => item.Product_name === name);
+    let newData = [...ddata];
+    let target = newData.find((item) => item.Title === name);
     target.Checked = !target.Checked;
     setData(newData);
   };
@@ -126,36 +144,57 @@ function CartItems() {
   useEffect(() => {
     const getTotal = () => {
       let curtotal = 0;
-      data.map((item) => {
+      ddata.map((item) => {
         if (item.Checked) {
-          curtotal += item.Price * item.Quantity;
+          curtotal += item.Price * item.count;
         }
       });
 
       setTotal(curtotal);
     };
     getTotal();
-  }, [data]);
+  }, [ddata]);
+
+  useEffect(() => {
+    getShoppingCart()
+      .then((cartData) => {
+        console.log(cartData);
+        let idList = cartData.map(function (item) {
+          console.log(item);
+          console.log(item.cartItemKey.item);
+          return item.cartItemKey.item;
+        });
+
+        console.log(idList);
+        return [cartData, getProductList(idList)];
+      })
+      .then((productDetails) => {
+        for (let i = 0; i < productDetails[0].length; i++) {
+          Object.assign(productDetails[0][i], productDetails[1][i]);
+        }
+        setDdata(productDetails[0]);
+      });
+  }, []);
   return (
     <div>
       <InfiniteScroll
-        dataLength={data.length}
+        dataLength={ddata.length}
         //next={}
-        hasMore={data.length < 2}
+        hasMore={ddata.length < 2}
         loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
         endMessage={<Divider plain>It is all, nothing more 🤐</Divider>}
         scrollableTarget="scrollableDiv"
         height="700px"
       >
         <List
-          dataSource={data}
+          dataSource={ddata}
           renderItem={(item) => (
             <List.Item>
-              <Card title={item.Seller_name} style={{ width: "500px" }}>
+              <Card title={item.Owner} style={{ width: "500px" }}>
                 <Row align="middle">
                   <Col span={2}>
                     <Checkbox
-                      onChange={() => checked(item.Product_name)}
+                      onChange={() => checked(item.Title)}
                       checked={item.Checked}
                     ></Checkbox>
                   </Col>
@@ -168,7 +207,7 @@ function CartItems() {
                           shape="square"
                         />
                       }
-                      title={item.Product_name}
+                      title={item.Title}
                       description={"￥" + item.Price}
                     />
                   </Col>
@@ -177,19 +216,16 @@ function CartItems() {
                       <Space>
                         <Button
                           size="small"
-                          onClick={() => minusOne(item.Product_name)}
+                          onClick={() => minusOne(item.Title)}
                         >
                           -
                         </Button>
-                        <Tooltip>{item.Quantity}</Tooltip>
-                        <Button
-                          size="small"
-                          onClick={() => addOne(item.Product_name)}
-                        >
+                        <Tooltip>{item.count}</Tooltip>
+                        <Button size="small" onClick={() => addOne(item.Title)}>
                           +
                         </Button>
                       </Space>
-                      <Button onClick={() => deleteItem(item.Product_name)}>
+                      <Button onClick={() => deleteItem(item.Title)}>
                         Delete
                       </Button>
                     </Space>

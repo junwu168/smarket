@@ -80,3 +80,36 @@ export const register = (credential) => {
     }
   });
 };
+
+export const getShoppingCart = () => {
+  const getShoppingCartUrl = domain + "/cart";
+  const token = localStorage.getItem("userToken");
+  return fetch(getShoppingCartUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to getShoppingcart");
+    }
+    return response.json();
+  });
+};
+
+export const getProductList = (products) => {
+  const getProductListUrl = domain + "/list/products";
+  return fetch(getProductListUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(products),
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to getProductList");
+    }
+    return response.json();
+  });
+};
