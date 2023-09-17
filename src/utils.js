@@ -113,3 +113,56 @@ export const getProductList = (products) => {
     return response.json();
   });
 };
+
+export const getListedItem = (username) => {
+  const listedItemUrl = `${domain}/list?username=${encodeURIComponent(
+    username
+  )}`;
+
+  return fetch(listedItemUrl, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Something wrong, try again");
+    }
+    return response.json();
+  });
+};
+
+export const deleteListedItem = (itemId) => {
+  const sellItemUrl = domain + "/sell/" + itemId;
+  const token = localStorage.getItem("userToken");
+
+  return fetch(sellItemUrl, {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (!response.ok) {
+      throw new Error("Failed to delete the item.");
+    }
+    return response.status;
+  });
+};
+
+export const uploadListItem = (data) => {
+  const token = localStorage.getItem("userToken");
+  const uploadUrl = domain + "/sell";
+
+  return fetch(uploadUrl, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: data,
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to upload stay");
+    }
+  });
+};

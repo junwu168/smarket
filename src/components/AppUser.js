@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { Menu, Dropdown, Button, Form, Input, message, Modal } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
-import { login, register, logout } from "../utils";
-import { Link } from "react-router-dom";
+import { login, register } from "../utils";
+import { Link, useNavigate } from "react-router-dom";
 
 function AppUser() {
+  const navigate = useNavigate();
   const [displayLoginModal, setDisplayLoginModal] = useState(false);
   const [displayRegisterModal, setDisplayRegisterModal] = useState(false);
 
@@ -22,6 +23,7 @@ function AppUser() {
 
       if (response) {
         localStorage.setItem("userToken", response);
+        localStorage.setItem("currentUser", data.Username);
       }
 
       setDisplayLoginModal(false);
@@ -46,8 +48,10 @@ function AppUser() {
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
+    localStorage.removeItem("currentUser");
     setIsLoggedIn(false);
     message.success("Successfully logged out");
+    navigate("/");
   };
 
   const handleMenuClick = (e) => {

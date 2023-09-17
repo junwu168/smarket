@@ -1,10 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Button, Card, Image, List, Rate, Typography } from "antd";
 import { getProduct } from "../utils";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { SearchContext } from "../App";
 
 function Products() {
+  const location = useLocation();
   const [items, setItems] = useState([]);
   const [loading, setLoading] = useState(false);
   const { searchResults } = useContext(SearchContext);
@@ -20,7 +21,7 @@ function Products() {
           setLoading(false);
         });
     }
-  }, [searchResults]);
+  }, [searchResults, location]);
 
   const columns = items.length > 2 ? 3 : items.length;
 
@@ -30,14 +31,16 @@ function Products() {
         loading={loading}
         grid={{ column: columns }}
         renderItem={(product, index) => {
+          const imageUrl =
+            product.Images && product.Images.length > 0
+              ? product.Images[0].url
+              : "https://placehold.co/600x400?text=No+Preview";
           return (
             <Card
               className="itemCard"
               title={product.Title}
               key={index}
-              cover={
-                <Image className="itemCardImage" src={product.Images[0].url} />
-              }
+              cover={<Image className="itemCardImage" src={imageUrl} />}
               actions={[
                 <Rate allowHalf disabled value={3.5} />,
                 <Link to={`/product/${product.id}`}>

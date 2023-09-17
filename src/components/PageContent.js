@@ -1,8 +1,15 @@
 import Products from "./Products";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, Navigate } from "react-router-dom";
 import ProductDetail from "./ProductDetail";
 import SellingOverview from "./SellingOverview";
 import ListAnItem from "./ListAnItem";
+
+function PrivateRoute({ children }) {
+  const token = localStorage.getItem("userToken");
+
+  // If token exists, render the children (the actual component), else redirect to a login or home page.
+  return token ? children : <Navigate to="/" />;
+}
 
 function PageContent() {
   return (
@@ -10,8 +17,25 @@ function PageContent() {
       <Routes>
         <Route path="/product/:id" element={<ProductDetail />} />
         <Route path="/" element={<Products />} />
-        <Route path="/sell" element={<SellingOverview />} />
-        <Route path="/list" element={<ListAnItem />} />
+
+        {/* Wrapped SellingOverview and ListAnItem inside PrivateRoute */}
+        <Route
+          path="/sell"
+          element={
+            <PrivateRoute>
+              <SellingOverview />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/list"
+          element={
+            <PrivateRoute>
+              <ListAnItem />
+            </PrivateRoute>
+          }
+        />
+
         {/* Add other routes as needed */}
       </Routes>
     </div>

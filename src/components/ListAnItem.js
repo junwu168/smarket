@@ -1,105 +1,107 @@
-import React, { useState } from "react";
-import { Input, Select, Button, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import React, { useState, useRef } from "react";
+import { Form, Input, InputNumber, Button, message } from "antd";
+import { uploadListItem } from "../utils";
+import { useNavigate } from "react-router-dom";
+
+const layout = {
+  labelCol: { span: 8 },
+  wrapperCol: { span: 16 },
+};
 
 function ListAnItem() {
-  const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [category, setCategory] = useState(null);
-  const [image, setImage] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const fileInputRef = useRef(null);
+  const navigate = useNavigate();
 
-  // Product categories
-  const categories = ["Smartphones", "TV", "Cameras", "Fiction", "Science"];
+  const handleSubmit = async (values) => {
+    const formData = new FormData();
+    const { files } = fileInputRef.current;
 
-  const handleSubmit = () => {
-    if (title && description && price && category && image) {
-      // Logic to add the item for sale
-      message.success("Item listed successfully");
-    } else {
-      message.error("Please fill in all fields");
+    if (files.length > 5) {
+      message.error("You can at most upload 5 pictures.");
+      return;
+    }
+
+    for (let i = 0; i < files.length; i++) {
+      formData.append("Images", files[i]);
+    }
+
+    formData.append("Title", values.Title);
+    formData.append("Price", values.Price);
+    formData.append("Description", values.Description);
+    formData.append("Inventory", values.Inventory);
+
+    setLoading(true);
+    try {
+      await uploadListItem(formData);
+      message.success("upload successfully");
+      navigate("/sell");
+    } catch (error) {
+      message.error(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleCancel = () => {
-    setTitle("");
-    setDescription("");
-    setPrice("");
-    setCategory(null);
-    setImage(null);
-  };
-
-  const handleImageUpload = (info) => {
-    if (info.file.status === "done") {
-      setImage(info.file.originFileObj);
-      message.success(`${info.file.name} uploaded successfully`);
-    } else if (info.file.status === "error") {
-      message.error(`${info.file.name} upload failed`);
-    }
+    navigate("/sell");
   };
 
   return (
-    <div className="list-item-container">
-      <h2>List an Item</h2>
-
-      <Input
-        placeholder="Title"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      />
-
-      <Input.TextArea
-        placeholder="Description"
-        value={description}
-        onChange={(e) => setDescription(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      />
-
-      <Input
-        placeholder="Price"
-        type="number"
-        prefix="$"
-        value={price}
-        onChange={(e) => setPrice(e.target.value)}
-        style={{ marginBottom: "10px" }}
-      />
-
-      <Select
-        placeholder="Select a category"
-        onChange={(value) => setCategory(value)}
-        style={{ width: "100%", marginBottom: "10px" }}
+    <Form
+      {...layout}
+      name="nest-messages"
+      onFinish={handleSubmit}
+      style={{ maxWidth: 1000, margin: "auto" }}
+    >
+      <Form.Item name="Title" label="Title" rules={[{ required: true }]}>
+        <Input />
+      </Form.Item>
+      <Form.Item
+        name="Inventory"
+        label="Quantity"
+        rules={[{ required: true, type: "number", min: 1 }]}
       >
-        {categories.map((cat) => (
-          <Select.Option key={cat} value={cat}>
-            {cat}
-          </Select.Option>
-        ))}
-      </Select>
-
-      <Upload
-        name="image"
-        listType="picture"
-        showUploadList={false}
-        beforeUpload={() => false} // Prevent auto upload
-        onChange={handleImageUpload}
+        <InputNumber style={{ width: "100%" }} />
+      </Form.Item>
+      <Form.Item
+        name="Price"
+        label="Price"
+        rules={[{ required: true, type: "number", min: 0 }]}
       >
-        <Button icon={<UploadOutlined />} style={{ marginBottom: "10px" }}>
-          Upload Image
+        <InputNumber
+          placeholder="Enter price"
+          formatter={(value) =>
+            `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+          }
+          parser={(value) => value.replace(/\$\s?|(,*)/g, "")}
+          style={{ width: "100%" }}
+        />
+      </Form.Item>
+      <Form.Item
+        name="Description"
+        label="Description"
+        rules={[{ required: true }]}
+      >
+        <Input.TextArea autoSize={{ minRows: 2, maxRows: 6 }} />
+      </Form.Item>
+      <Form.Item name="Images" label="Picture" rules={[{ required: true }]}>
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          ref={fileInputRef}
+          multiple={true}
+        />
+      </Form.Item>
+      <Form.Item wrapperCol={{ ...layout.wrapperCol, offset: 8 }}>
+        <Button type="primary" htmlType="submit" loading={loading}>
+          Submit
         </Button>
-      </Upload>
-
-      <div className="buttons">
-        <Button
-          type="primary"
-          onClick={handleSubmit}
-          style={{ marginRight: "10px" }}
-        >
-          Sell
+        <Button style={{ marginLeft: "10px" }} onClick={handleCancel}>
+          Cancel
         </Button>
-        <Button onClick={handleCancel}>Cancel</Button>
-      </div>
-    </div>
+      </Form.Item>
+    </Form>
   );
 }
 
