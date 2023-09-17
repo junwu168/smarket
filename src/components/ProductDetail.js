@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getProductById } from "../utils";
-import { Button, Rate, Carousel, Typography } from "antd";
+import { getProductById, addCart } from "../utils";
+import { Button, Rate, Carousel, Typography, message, Popconfirm } from "antd";
 import { ShoppingCartOutlined, DollarCircleOutlined } from "@ant-design/icons";
 
 const { Title, Paragraph } = Typography;
@@ -9,6 +9,17 @@ const { Title, Paragraph } = Typography;
 function ProductDetail() {
   const { id } = useParams(); // Get the product ID from the URL
   const [product, setProduct] = useState(null);
+
+  const addToCart = (id) => {
+    console.log(id);
+    addCart(id);
+  };
+
+  const confirm = (id) => {
+    addToCart(id);
+    message.success("Added to Shopping Cart!");
+  };
+  const cancel = (e) => {};
 
   useEffect(() => {
     getProductById(id)
@@ -64,13 +75,22 @@ function ProductDetail() {
           <Title level={4}>Price: ${product.Price}</Title>
           <Paragraph>Stock: {product.Inventory}</Paragraph>
           <Paragraph>{product.Description}</Paragraph>
-          <Button
-            type="primary"
-            icon={<ShoppingCartOutlined />}
-            style={{ marginRight: "10px" }}
+          <Popconfirm
+            title="Add to Cart"
+            description="Are you sure to add this in shopping cart?"
+            onConfirm={() => confirm(product.id)}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
           >
-            Add to Cart
-          </Button>
+            <Button
+              type="primary"
+              icon={<ShoppingCartOutlined />}
+              style={{ marginRight: "10px" }}
+            >
+              Add to Cart
+            </Button>
+          </Popconfirm>
           <Button type="danger" icon={<DollarCircleOutlined />}>
             Buy It Now
           </Button>
