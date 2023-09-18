@@ -1,3 +1,6 @@
+import { json } from "react-router-dom";
+import ProductDetail from "./components/ProductDetail";
+
 const domain = "http://localhost:8080";
 
 export const getProduct = () => {
@@ -98,7 +101,7 @@ export const getShoppingCart = () => {
   });
 };
 
-export const getProductList = (products) => {
+export const getProductList = (products, cartData) => {
   const getProductListUrl = domain + "/list/products";
   return fetch(getProductListUrl, {
     method: "POST",
@@ -110,59 +113,49 @@ export const getProductList = (products) => {
     if (response.status !== 200) {
       throw Error("Fail to getProductList");
     }
-    return response.json();
+
+    return new Promise(function (resolve, reject) {
+      response.json().then((ProductDetails) => {
+        for (let i = 0; i < ProductDetails.length; i++) {
+          Object.assign(ProductDetails[i], cartData[i]);
+        }
+        console.log(ProductDetails);
+        resolve(ProductDetails);
+      });
+    });
   });
 };
 
-export const getListedItem = (username) => {
-  const listedItemUrl = `${domain}/list?username=${encodeURIComponent(
-    username
-  )}`;
-
-  return fetch(listedItemUrl, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-    },
-  }).then((response) => {
-    if (response.status !== 200) {
-      throw Error("Something wrong, try again");
-    }
-    return response.json();
-  });
-};
-
-export const deleteListedItem = (itemId) => {
-  const sellItemUrl = domain + "/sell/" + itemId;
+export const cartCheckout = (items) => {
+  const cartCheckoutUrl = domain + "/cart/checkout";
   const token = localStorage.getItem("userToken");
-
-  return fetch(sellItemUrl, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  }).then((response) => {
-    if (!response.ok) {
-      throw new Error("Failed to delete the item.");
-    }
-    return response.status;
-  });
-};
-
-export const uploadListItem = (data) => {
-  const token = localStorage.getItem("userToken");
-  const uploadUrl = domain + "/sell";
-
-  return fetch(uploadUrl, {
+  return fetch(cartCheckoutUrl, {
     method: "POST",
     headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
-    body: data,
+    body: JSON.stringify(items),
   }).then((response) => {
     if (response.status !== 200) {
-      throw Error("Fail to upload stay");
+      throw Error("Fail to cartCheckout");
+    }
+  });
+};
+
+export const addCart = (id) => {
+  const addCartUrl = domain + "/cart?Item_id=" + id + "&Quantity=1";
+  const token = localStorage.getItem("userToken");
+  console.log(addCartUrl);
+  return fetch(addCartUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to addCart");
     }
   });
 };
