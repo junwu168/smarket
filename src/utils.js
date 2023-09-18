@@ -98,8 +98,9 @@ export const getShoppingCart = () => {
   });
 };
 
-export const getProductList = (products) => {
+export const getProductList = (products, cartData) => {
   const getProductListUrl = domain + "/list/products";
+  console.log("produvts: ", products);
   return fetch(getProductListUrl, {
     method: "POST",
     headers: {
@@ -107,10 +108,54 @@ export const getProductList = (products) => {
     },
     body: JSON.stringify(products),
   }).then((response) => {
+    console.log(response);
     if (response.status !== 200) {
       throw Error("Fail to getProductList");
     }
-    return response.json();
+
+    return new Promise(function (resolve, reject) {
+      response.json().then((ProductDetails) => {
+        for (let i = 0; i < ProductDetails.length; i++) {
+          Object.assign(ProductDetails[i], cartData[i]);
+        }
+        console.log(ProductDetails);
+        resolve(ProductDetails);
+      });
+    });
+  });
+};
+
+export const cartCheckout = (items) => {
+  const cartCheckoutUrl = domain + "/cart/checkout";
+  const token = localStorage.getItem("userToken");
+  return fetch(cartCheckoutUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(items),
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to cartCheckout");
+    }
+  });
+};
+
+export const addCart = (id) => {
+  const addCartUrl = domain + "/cart?Item_id=" + id + "&Quantity=1";
+  const token = localStorage.getItem("userToken");
+  console.log(addCartUrl);
+  return fetch(addCartUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to addCart");
+    }
   });
 };
 
