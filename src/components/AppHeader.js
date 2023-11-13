@@ -3,6 +3,7 @@ import { Menu } from "antd";
 import { HomeFilled } from "@ant-design/icons";
 import AppCart from "./AppCart";
 import AppUser from "./AppUser";
+import History from "./History";
 import SearchBox from "./SearchBox";
 import { useNavigate } from "react-router-dom";
 
@@ -64,6 +65,7 @@ function AppHeader() {
       />
       <SearchBox />
       <div style={{ display: "flex", alignItems: "center" }}>
+        <History />
         <AppCart />
         <AppUser />
       </div>

@@ -89,10 +89,17 @@ function CartItems(prop) {
   };
 
   const checkout = () => {
+    console.log(ddata);
     let checkedItems = ddata
       .filter((item) => item.checked === true)
       .map((item) => {
-        return { id: item.id, count: item.count };
+        return {
+          id: item.id,
+          count: item.count,
+          owner: item.Owner.Username,
+          price: item.Price,
+          name: item.Title,
+        };
       });
     cartCheckout(checkedItems);
     let newData = ddata.filter((item) => item.checked === false);

@@ -81,6 +81,23 @@ export const register = (credential) => {
   });
 };
 
+export const getHistory = () => {
+  const getHistoryUrl = domain + "/history";
+  const token = localStorage.getItem("userToken");
+  return fetch(getHistoryUrl, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw Error("Fail to getHistory");
+    }
+    return response.json();
+  });
+};
+
 export const getShoppingCart = () => {
   const getShoppingCartUrl = domain + "/cart";
   const token = localStorage.getItem("userToken");
@@ -100,7 +117,7 @@ export const getShoppingCart = () => {
 
 export const getProductList = (products, cartData) => {
   const getProductListUrl = domain + "/list/products";
-  console.log("produvts: ", products);
+
   return fetch(getProductListUrl, {
     method: "POST",
     headers: {
@@ -108,7 +125,6 @@ export const getProductList = (products, cartData) => {
     },
     body: JSON.stringify(products),
   }).then((response) => {
-    console.log(response);
     if (response.status !== 200) {
       throw Error("Fail to getProductList");
     }
@@ -118,7 +134,7 @@ export const getProductList = (products, cartData) => {
         for (let i = 0; i < ProductDetails.length; i++) {
           Object.assign(ProductDetails[i], cartData[i]);
         }
-        console.log(ProductDetails);
+
         resolve(ProductDetails);
       });
     });
@@ -145,7 +161,7 @@ export const cartCheckout = (items) => {
 export const addCart = (id) => {
   const addCartUrl = domain + "/cart?Item_id=" + id + "&Quantity=1";
   const token = localStorage.getItem("userToken");
-  console.log(addCartUrl);
+
   return fetch(addCartUrl, {
     method: "POST",
     headers: {
